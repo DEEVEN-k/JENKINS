@@ -1,29 +1,19 @@
 #!/bin/bash
 
-# ------------------------------------------
-# Script pour packager une app JavaFX en .dmg
-# avec jpackage sous macOS
-# ------------------------------------------
-
-APP_NAME="calculatriceDEEVEN"
+APP_NAME="DEEVENmacosCalculator"
 MAIN_JAR="demo-2.jar"
 MAIN_CLASS="com.example.CalculatriceApp"
-ICON="icon.png"
 INPUT_DIR="target"
 OUTPUT_DIR="dist"
 
 jpackage \
   --type dmg \
-  --name "$APP_NAME" \
   --input "$INPUT_DIR" \
+  --dest "$OUTPUT_DIR" \
+  --name "$APP_NAME" \
   --main-jar "$MAIN_JAR" \
   --main-class "$MAIN_CLASS" \
-  --dest "$OUTPUT_DIR" \
-  --icon "$ICON" \
   --java-options "--add-opens javafx.base/com.sun.javafx.runtime=ALL-UNNAMED" \
-  --mac-package-identifier "com.example.calculatrice" \
   --mac-package-name "$APP_NAME" \
+  --mac-package-identifier "com.example.calculatrice" \
   --verbose
-
-echo ""
-echo "✅ DMG généré dans le dossier $OUTPUT_DIR"

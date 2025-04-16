@@ -18,8 +18,8 @@ pipeline {
 
     options {
         timeout(time: 30, unit: 'MINUTES') 
-                timestamps() 
-                    }
+        timestamps() 
+    }
 
     stages {
         stage('Checkout') {
@@ -70,6 +70,53 @@ pipeline {
                 '''
             }
         }
+
+        stage('Créer installateur .deb') {
+            when {
+                expression { isUnix() }
+            }
+            steps {
+                echo '📦 Création de l\'installateur Debian (.deb)...'
+                sh '''
+                    mkdir -p dist
+                    jpackage \
+                      --type deb \
+                      --input target \
+                      --dest dist \
+                      --name CalculatriceDEEVEN \
+                      --main-jar demo-2.jar \
+                      --main-class com.example.CalculatriceApp \
+                      --icon icon.png \
+                      --linux-shortcut \
+                      --java-options "--add-opens javafx.base/com.sun.javafx.runtime=ALL-UNNAMED" \
+                      --verbose
+                '''
+            }
+        }
+
+        stage('Créer installateur .exe') {
+            when {
+                expression { isWindows() }
+            }
+            steps {
+                echo '🪟 Création de l\'installateur Windows (.exe)...'
+                bat '''
+                jpackage ^
+                  --type exe ^
+                  --input target ^
+                  --dest dist ^
+                  --name DEEVENwinCalculator ^
+                  --main-jar demo-2.jar ^
+                  --main-class com.example.CalculatriceApp ^
+                  --win-shortcut ^
+                  --win-menu ^
+                  --java-options "--add-opens javafx.base/com.sun.javafx.runtime=ALL-UNNAMED" ^
+                  --verbose
+                '''
+            }
+        }
+
+        // Tu peux aussi ajouter une étape macOS ici si besoin
     }
 
     post {

@@ -1,13 +1,19 @@
 #!/bin/bash
 
+APP_NAME="DEEVENlinuxCalculator"
+MAIN_JAR="demo-2.jar"
+MAIN_CLASS="com.example.CalculatriceApp"
+ICON="icon.png" 
+INPUT_DIR="target"
+OUTPUT_DIR="dist"
+
 jpackage \
   --type deb \
-  --input target \
-  --dest dist \
-  --name calculatriceDEEVEN \
-  --main-jar demo-2.jar \
-  --main-class com.example.CalculatriceApp \
-  --icon icon.png \
+  --input "$INPUT_DIR" \
+  --dest "$OUTPUT_DIR" \
+  --name "$APP_NAME" \
+  --main-jar "$MAIN_JAR" \
+  --main-class "$MAIN_CLASS" \
   --linux-shortcut \
   --java-options "--add-opens javafx.base/com.sun.javafx.runtime=ALL-UNNAMED" \
   --verbose
