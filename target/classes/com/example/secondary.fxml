@@ -2,13 +2,13 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
 
-<BorderPane fx:controller="calculatrice.CalculatorController"
+<BorderPane fx:controller="com.example.CalculatorController"
             xmlns:fx="http://javafx.com/fxml"
             prefWidth="400" prefHeight="600"
-            style="-fx-background-color: #1e1e1e;">
-    
+            style="-fx-background-color: #1e1e1e;"
+            onKeyPressed="#handleKeyPress">
+
     <top>
         <VBox spacing="5" padding="10">
             <TextArea fx:id="display"
@@ -36,34 +36,34 @@
             </rowConstraints>
 
             <!-- Ligne 1 -->
-            <Button text="7" onAction="#appendText" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="calc-btn"/>
-            <Button text="8" onAction="#appendText" GridPane.rowIndex="0" GridPane.columnIndex="1" styleClass="calc-btn"/>
-            <Button text="9" onAction="#appendText" GridPane.rowIndex="0" GridPane.columnIndex="2" styleClass="calc-btn"/>
-            <Button text="/" onAction="#appendText" GridPane.rowIndex="0" GridPane.columnIndex="3" styleClass="calc-btn op-btn"/>
+            <Button text="7" onAction="#handleButton" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <Button text="8" onAction="#handleButton" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <Button text="9" onAction="#handleButton" GridPane.rowIndex="0" GridPane.columnIndex="2"/>
+            <Button text="/" onAction="#handleButton" GridPane.rowIndex="0" GridPane.columnIndex="3"/>
 
             <!-- Ligne 2 -->
-            <Button text="4" onAction="#appendText" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="calc-btn"/>
-            <Button text="5" onAction="#appendText" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="calc-btn"/>
-            <Button text="6" onAction="#appendText" GridPane.rowIndex="1" GridPane.columnIndex="2" styleClass="calc-btn"/>
-            <Button text="*" onAction="#appendText" GridPane.rowIndex="1" GridPane.columnIndex="3" styleClass="calc-btn op-btn"/>
+            <Button text="4" onAction="#handleButton" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <Button text="5" onAction="#handleButton" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Button text="6" onAction="#handleButton" GridPane.rowIndex="1" GridPane.columnIndex="2"/>
+            <Button text="*" onAction="#handleButton" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
 
             <!-- Ligne 3 -->
-            <Button text="1" onAction="#appendText" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="calc-btn"/>
-            <Button text="2" onAction="#appendText" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="calc-btn"/>
-            <Button text="3" onAction="#appendText" GridPane.rowIndex="2" GridPane.columnIndex="2" styleClass="calc-btn"/>
-            <Button text="-" onAction="#appendText" GridPane.rowIndex="2" GridPane.columnIndex="3" styleClass="calc-btn op-btn"/>
+            <Button text="1" onAction="#handleButton" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <Button text="2" onAction="#handleButton" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Button text="3" onAction="#handleButton" GridPane.rowIndex="2" GridPane.columnIndex="2"/>
+            <Button text="-" onAction="#handleButton" GridPane.rowIndex="2" GridPane.columnIndex="3"/>
 
             <!-- Ligne 4 -->
-            <Button text="0" onAction="#appendText" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="calc-btn"/>
-            <Button text="." onAction="#appendText" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="calc-btn"/>
-            <Button text="=" onAction="#calculate" GridPane.rowIndex="3" GridPane.columnIndex="2" styleClass="calc-btn eq-btn"/>
-            <Button text="+" onAction="#appendText" GridPane.rowIndex="3" GridPane.columnIndex="3" styleClass="calc-btn op-btn"/>
+            <Button text="0" onAction="#handleButton" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <Button text="." onAction="#handleButton" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <Button text="=" onAction="#calculate" GridPane.rowIndex="3" GridPane.columnIndex="2"/>
+            <Button text="+" onAction="#handleButton" GridPane.rowIndex="3" GridPane.columnIndex="3"/>
 
             <!-- Ligne 5 -->
-            <Button text="C" onAction="#clear" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="calc-btn"/>
-            <Button text="⌫" onAction="#deleteLast" GridPane.rowIndex="4" GridPane.columnIndex="1" styleClass="calc-btn"/>
-            <Button text="(" onAction="#appendText" GridPane.rowIndex="4" GridPane.columnIndex="2" styleClass="calc-btn"/>
-            <Button text=")" onAction="#appendText" GridPane.rowIndex="4" GridPane.columnIndex="3" styleClass="calc-btn"/>
+            <Button text="C" onAction="#clear" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <Button text="⌫" onAction="#deleteLast" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <Button text="(" onAction="#handleButton" GridPane.rowIndex="4" GridPane.columnIndex="2"/>
+            <Button text=")" onAction="#handleButton" GridPane.rowIndex="4" GridPane.columnIndex="3"/>
         </GridPane>
     </center>
 </BorderPane>

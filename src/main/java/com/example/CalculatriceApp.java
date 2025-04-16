@@ -10,8 +10,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-
-import java.util.Stack;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
+import net.objecthunter.exp4j.function.Function;
 
 public class CalculatriceApp extends Application {
 
@@ -24,7 +25,7 @@ public class CalculatriceApp extends Application {
     public void start(Stage primaryStage) {
         display.setFont(Font.font(24));
         display.setEditable(false);
-        display.setStyle("-fx-control-inner-background: #1e1e1e; -fx-text-fill: white;");
+        setDarkModeStyle();
 
         GridPane buttons = createButtonGrid();
         VBox historyBox = new VBox(new Label("Historique"), historyView);
@@ -43,7 +44,7 @@ public class CalculatriceApp extends Application {
         scene.setOnKeyPressed(this::handleKeyPress);
 
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Calculatrice JavaFX");
+        primaryStage.setTitle("Calculatrice DEVPRO");
         primaryStage.show();
     }
 
@@ -81,9 +82,14 @@ public class CalculatriceApp extends Application {
                 currentInput.setLength(0);
                 display.clear();
             }
-            case "sin" -> currentInput.append("Math.sin(");
-            case "cos" -> currentInput.append("Math.cos(");
-            case "√" -> currentInput.append("Math.sqrt(");
+            case "sin", "cos", "√" -> {
+                // Wrap the function call
+                if (input.equals("√")) {
+                    currentInput.append("sqrt(");
+                } else {
+                    currentInput.append(input).append("(");
+                }
+            }
             default -> currentInput.append(input);
         }
         display.setText(currentInput.toString());
@@ -91,16 +97,22 @@ public class CalculatriceApp extends Application {
 
     private void evaluate() {
         try {
-            String expr = currentInput.toString()
-                    .replace("Math.sin", "Math.sin")
-                    .replace("Math.cos", "Math.cos")
-                    .replace("Math.sqrt", "Math.sqrt");
-            Object result = new javax.script.ScriptEngineManager()
-                    .getEngineByName("JavaScript")
-                    .eval(expr);
+            // Support for sqrt (√)
+            Function sqrt = new Function("sqrt", 1) {
+                @Override
+                public double apply(double... args) {
+                    return Math.sqrt(args[0]);
+                }
+            };
+
+            Expression expression = new ExpressionBuilder(currentInput.toString())
+                    .functions(sqrt)
+                    .build();
+            double result = expression.evaluate();
             display.setText(String.valueOf(result));
-            historyView.getItems().add(expr + " = " + result);
+            historyView.getItems().add(currentInput + " = " + result);
             currentInput.setLength(0);
+            currentInput.append(result);
         } catch (Exception e) {
             display.setText("Erreur");
             currentInput.setLength(0);
@@ -130,10 +142,18 @@ public class CalculatriceApp extends Application {
     private void toggleTheme() {
         darkMode = !darkMode;
         if (darkMode) {
-            display.setStyle("-fx-control-inner-background: #1e1e1e; -fx-text-fill: white;");
+            setDarkModeStyle();
         } else {
-            display.setStyle("-fx-control-inner-background: white; -fx-text-fill: black;");
+            setLightModeStyle();
         }
+    }
+
+    private void setDarkModeStyle() {
+        display.setStyle("-fx-control-inner-background: #1e1e1e; -fx-text-fill: white;");
+    }
+
+    private void setLightModeStyle() {
+        display.setStyle("-fx-control-inner-background: white; -fx-text-fill: black;");
     }
 
     public static void main(String[] args) {

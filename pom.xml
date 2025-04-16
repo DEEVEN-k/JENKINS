@@ -24,6 +24,24 @@
             <artifactId>javafx-fxml</artifactId>
             <version>13</version>
         </dependency>
+    
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-core</artifactId>
+        <version>3.0.0-M4</version>
+      </dependency>
+    
+      <dependency>
+        <groupId>com.sun.xml.bind</groupId>
+        <artifactId>jaxb-xjc</artifactId>
+        <version>2.4.0-b180830.0438</version>
+      </dependency>
+      <dependency>
+    <groupId>net.objecthunter</groupId>
+    <artifactId>exp4j</artifactId>
+    <version>0.4.8</version>
+</dependency>
+
     </dependencies>
 
     <build>
