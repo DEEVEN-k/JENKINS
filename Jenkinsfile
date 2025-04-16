@@ -3,12 +3,13 @@ pipeline {
 
     environment {
         MAVEN_HOME = '/usr/share/maven'
+        PATH = "${env.MAVEN_HOME}/bin:${env.PATH}"
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'git@github.com:DEEVEN-k/JENKINS.git'
+                git url: 'https://github.com/DEEVEN-k/JENKINS.git', branch: 'main'
             }
         }
 
