@@ -1,19 +1,14 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven 3.8.5'  // Assure-toi que ce nom correspond à l'outil Maven installé dans Jenkins
-        jdk 'jdk-17'         // JavaFX fonctionne bien avec Java 17, adapte si besoin
-    }
-
     environment {
-        MAVEN_OPTS = '-Xmx1024m'
+        MAVEN_HOME = '/usr/share/maven'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git 'https://ton-repo-git.com/utilisateur/projet-javafx.git' // Remplace par ton dépôt
+                git 'https://github.com/DEEVEN-k/JENKINS.git'
             }
         }
 
@@ -44,10 +39,10 @@ pipeline {
 
     post {
         success {
-            echo 'Build terminé avec succès !'
+            echo '✅ Build réussi !'
         }
         failure {
-            echo 'Le build a échoué.'
+            echo '❌ Build échoué.'
         }
     }
 }
