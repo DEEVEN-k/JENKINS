@@ -1,7 +1,14 @@
 pipeline {
     agent any
 
+    tools {
+        
+        jdk 'JDK17'
+        maven 'Maven3' 
+    }
+
     environment {
+       
         MAVEN_HOME = '/usr/share/maven'
         PATH = "${env.MAVEN_HOME}/bin:${env.PATH}"
     }
