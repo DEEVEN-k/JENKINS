@@ -90,26 +90,7 @@ pipeline {
             }
         }
 
-        stage('Créer .exe') {
-            when { expression { isWindows() } }
-            steps {
-                echo '🪟 Création .exe...'
-                bat '''
-                set JAR_NAME=calculatrice-1.0.0-jar-with-dependencies.jar
-                jpackage ^
-                  --type exe ^
-                  --input target ^
-                  --dest dist ^
-                  --name DEEVENwinCalculator ^
-                  --main-jar %JAR_NAME% ^
-                  --main-class com.example.CalculatriceApp ^
-                  --win-shortcut ^
-                  --win-menu ^
-                  --java-options "--add-opens javafx.base/com.sun.javafx.runtime=ALL-UNNAMED" ^
-                  --verbose
-                '''
-            }
-        }
+      
     }
 
     post {
