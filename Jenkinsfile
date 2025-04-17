@@ -10,7 +10,7 @@ pipeline {
         PATH = "${env.MAVEN_HOME}/bin:${env.PATH}"
         DEPLOY_DIR = '/home/deeven/Modèles/demo/target'
         JAR_NAME = 'calculatrice-1.0.0-jar-with-dependencies.jar'
-        JAVAFX_LIB = "$HOME/javafx/javafx-sdk-21.0.1/lib"
+        JAVAFX_LIB = "/opt/javafx-sdk-21.0.1/lib"
     }
 
     triggers {
