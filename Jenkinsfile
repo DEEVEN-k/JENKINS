@@ -142,7 +142,7 @@ stage('Installer dépendances jpackage (Linux)') {
 
     post {
         success {
-            echo '✅ Pipeline CI/CD terminé avec succès !'
+            echo 'Pipeline CI/CD terminé avec succès !'
         }
         failure {
             echo '❌ Le pipeline a échoué.'
