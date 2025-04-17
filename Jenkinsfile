@@ -101,17 +101,18 @@ stage('Installer dépendances jpackage (Linux)') {
                 sh '''
                     mkdir -p dist
                     JAR_FILE=$(ls target/*.jar | head -n 1)
-                    jpackage \
-                      --type deb \
-                      --input target \
-                      --dest dist \
-                      --name CalculatriceDEEVEN \
-                      --main-jar $(basename $JAR_FILE) \
-                      --main-class com.example.CalculatriceApp \
-                      --icon icon.png \
-                      --linux-shortcut \
-                      --java-options "--add-opens javafx.base/com.sun.javafx.runtime=ALL-UNNAMED" \
-                      --verbose
+                   jpackage \
+  --type deb \
+  --input target \
+  --dest dist \
+  --name CalculatriceDEEVEN \
+  --main-jar $(basename $JAR_FILE) \
+  --main-class com.example.CalculatriceApp \
+  --icon icon.png \
+  --linux-shortcut \
+  --java-options "--module-path $HOME/javafx/javafx-sdk-21.0.1/lib --add-modules javafx.controls,javafx.fxml" \
+  --verbose
+
                 '''
             }
         }
