@@ -81,6 +81,16 @@ pipeline {
     }
 }
 
+stage('Installer dépendances jpackage (Linux)') {
+    when {
+        expression { isUnix() }
+    }
+    steps {
+        echo '🔧 Installation de fakeroot et binutils...'
+        sh 'sudo apt-get update && sudo apt-get install -y fakeroot binutils'
+    }
+}
+
 
         stage('Créer installateur .deb') {
             when {
