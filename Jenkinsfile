@@ -9,7 +9,8 @@ pipeline {
         MAVEN_HOME = '/usr/share/maven'
         PATH = "${env.MAVEN_HOME}/bin:${env.PATH}"
         DEPLOY_DIR = '/home/deeven/Modèles/demo/target'
-        JAR_NAME = 'app.jar'
+        JAR_NAME = 'calculatrice-1.0.0-jar-with-dependencies.jar'
+        JAVAFX_LIB = "$HOME/javafx/javafx-sdk-21.0.1/lib"
     }
 
     triggers {
@@ -38,93 +39,63 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo '🧪 Exécution des tests unitaires...'
+                echo '🧪 Tests unitaires...'
                 sh 'mvn test'
             }
         }
 
         stage('Package') {
             steps {
-                echo '📦 Packaging de l’application...'
+                echo '📦 Packaging...'
                 sh 'mvn package'
             }
         }
 
         stage('Archive JAR') {
             steps {
-                echo '📁 Archivage de l’artefact...'
+                echo '📁 Archivage...'
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
 
-        stage('Deploy') {
-            when {
-                expression { fileExists('target') }
-            }
+        stage('Créer archive .zip') {
             steps {
-                echo '🚀 Déploiement de l’application...'
-                sh '''
-                    mkdir -p $DEPLOY_DIR
-                    cp target/*.jar $DEPLOY_DIR/$JAR_NAME
-                    echo "✅ Application déployée dans $DEPLOY_DIR"
-                '''
-            }
-        }
-
-        stage('Installer fakeroot') {
-    when {
-        expression { isUnix() }
-    }
-    steps {
-        echo '🔧 Installation de fakeroot...'
-        sh 'sudo apt-get update && sudo apt-get install -y fakeroot'
-    }
-}
-
-stage('Installer dépendances jpackage (Linux)') {
-    when {
-        expression { isUnix() }
-    }
-    steps {
-        echo '🔧 Installation de fakeroot et binutils...'
-        sh 'sudo apt-get update && sudo apt-get install -y fakeroot binutils'
-    }
-}
-
-
-        stage('Créer installateur .deb') {
-            when {
-                expression { isUnix() }
-            }
-            steps {
-                echo '📦 Création de l\'installateur Debian (.deb)...'
+                echo '🗜️ Création .zip...'
                 sh '''
                     mkdir -p dist
-                    JAR_FILE=$(ls target/*.jar | head -n 1)
-                   jpackage \
-  --type deb \
-  --input target \
-  --dest dist \
-  --name CalculatriceDEEVEN \
-  --main-jar $(basename $JAR_FILE) \
-  --main-class com.example.CalculatriceApp \
-  --icon icon.png \
-  --linux-shortcut \
-  --java-options "--module-path $HOME/javafx/javafx-sdk-21.0.1/lib --add-modules javafx.controls,javafx.fxml" \
-  --verbose
-
+                    cp target/${JAR_NAME} dist/
+                    cd dist && zip calculatrice-${BUILD_NUMBER}.zip ${JAR_NAME}
                 '''
             }
         }
 
-        stage('Créer installateur .exe') {
-            when {
-                expression { isWindows() }
-            }
+        stage('Créer .deb') {
+            when { expression { isUnix() } }
             steps {
-                echo '🪟 Création de l\'installateur Windows (.exe)...'
+                echo '📦 Création .deb...'
+                sh '''
+                    mkdir -p dist
+                    jpackage \
+                      --type deb \
+                      --input target \
+                      --dest dist \
+                      --name CalculatriceDEEVEN \
+                      --main-jar ${JAR_NAME} \
+                      --main-class com.example.CalculatriceApp \
+                      --icon icon.png \
+                      --linux-shortcut \
+                      --java-options "--module-path $JAVAFX_LIB --add-modules javafx.controls,javafx.fxml" \
+                      --verbose
+                '''
+            }
+        }
+
+        stage('Créer .exe') {
+            when { expression { isWindows() } }
+            steps {
+                echo '🪟 Création .exe...'
                 bat '''
-                for %%f in (target\*.jar) do set JAR_NAME=%%~nxf
+                set JAR_NAME=calculatrice-1.0.0-jar-with-dependencies.jar
                 jpackage ^
                   --type exe ^
                   --input target ^
@@ -143,13 +114,13 @@ stage('Installer dépendances jpackage (Linux)') {
 
     post {
         success {
-            echo 'Pipeline CI/CD terminé avec succès !'
+            echo '✅ Pipeline terminé avec succès !'
         }
         failure {
             echo '❌ Le pipeline a échoué.'
         }
         always {
-            echo '🧹 Nettoyage final (post-build)...'
+            echo '🧹 Nettoyage final...'
             cleanWs()
         }
     }

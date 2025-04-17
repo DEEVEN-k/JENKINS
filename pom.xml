@@ -1,18 +1,18 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
-                             
-    <modelVersion>4.0.0</modelVersion>
 
+    <modelVersion>4.0.0</modelVersion>
     <groupId>com.example</groupId>
-    <artifactId>demo</artifactId>
-    <version>2</version>
+    <artifactId>calculatrice</artifactId>
+    <version>1.0.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>17</maven.compiler.release>
         <javafx.version>21.0.1</javafx.version>
+        <javafx.lib>${env.JAVAFX_LIB}</javafx.lib>
     </properties>
 
     <dependencies>
@@ -50,8 +50,7 @@
 
     <build>
         <plugins>
-
-            <!-- Plugin de compilation -->
+            <!-- Compilation -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -61,7 +60,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Plugin JavaFX -->
+            <!-- JavaFX plugin -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -69,30 +68,41 @@
                 <configuration>
                     <mainClass>com.example.CalculatriceApp</mainClass>
                     <jvmArgs>
-                        --module-path /opt/javafx-sdk-21.0.1/lib
+                        --module-path ${javafx.lib}
                         --add-modules javafx.controls,javafx.fxml
                     </jvmArgs>
                 </configuration>
                 <executions>
                     <execution>
                         <id>default-cli</id>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
+                        <goals><goal>run</goal></goals>
                     </execution>
                 </executions>
             </plugin>
 
-            <!-- Plugin exec:java pour exécution locale (facultatif) -->
+            <!-- Packaging en JAR exécutable -->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.3.0</version>
                 <configuration>
-                    <mainClass>com.example.CalculatriceApp</mainClass>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.example.CalculatriceApp</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals><goal>single</goal></goals>
+                    </execution>
+                </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>
