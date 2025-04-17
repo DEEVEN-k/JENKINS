@@ -8,7 +8,7 @@ pipeline {
     environment {
         MAVEN_HOME = '/usr/share/maven'
         PATH = "${env.MAVEN_HOME}/bin:${env.PATH}"
-        DEPLOY_DIR = '/Modèles/deployments/demo'
+        DEPLOY_DIR = '/home/deeven/Modèles/demo/target'
         JAR_NAME = 'app.jar'
     }
 
