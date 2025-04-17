@@ -71,6 +71,17 @@ pipeline {
             }
         }
 
+        stage('Installer fakeroot') {
+    when {
+        expression { isUnix() }
+    }
+    steps {
+        echo '🔧 Installation de fakeroot...'
+        sh 'sudo apt-get update && sudo apt-get install -y fakeroot'
+    }
+}
+
+
         stage('Créer installateur .deb') {
             when {
                 expression { isUnix() }
