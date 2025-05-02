@@ -10,7 +10,7 @@ pipeline {
         PATH = "${env.MAVEN_HOME}/bin:${env.PATH}"
         DEPLOY_DIR = '/home/deeven/Modèles/demo/target'
         JAR_NAME = 'calculatrice-1.0.0-jar-with-dependencies.jar'
-        JAVAFX_LIB = "/opt/javafx-sdk-21.0.1/lib"
+        JAVAFX_LIB = "/opt/javafx-sdk-21.0.2/lib"
 
 
 
@@ -72,7 +72,26 @@ pipeline {
             }
         }
 
-
+      stage('Créer .rpm') {
+    when { expression { isUnix() } }
+    steps {
+        echo '📦 Création .rpm pour Fedora...'
+        sh '''
+            mkdir -p dist
+            jpackage \
+              --type rpm \
+              --input target \
+              --dest dist \
+              --name CalculatriceDEEVEN \
+              --main-jar ${JAR_NAME} \
+              --main-class com.example.CalculatriceApp \
+              --icon icon.png \
+              --linux-shortcut \
+              --java-options "--module-path $JAVAFX_LIB --add-modules javafx.controls,javafx.fxml" \
+              --verbose
+        '''
+    }
+}
 
       
     }
