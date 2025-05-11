@@ -33,9 +33,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo '🏗️ Compilation du projet...'
-                sh '''
-                    mvn clean compile
-                '''
+                sh 'mvn clean compile'
             }
         }
 
@@ -76,20 +74,19 @@ pipeline {
             steps {
                 echo '📦 Création de l’installateur .rpm...'
                 sh '''
-                  mkdir -p dist
+                    mkdir -p dist
 
-                  jpackage \
-                    --type rpm \
-                    --input target \
-                    --dest dist \
-                    --name CalculatriceDEEVEN \
-                    --main-jar calculatrice-1.0.0-jar-with-dependencies.jar \
-                    --main-class com.example.CalculatriceApp \
-                    --icon icon.png \
-                    --linux-shortcut \
-                    --add-modules javafx.controls,javafx.fxml \
-                    --verbose
-
+                    jpackage \
+                      --type rpm \
+                      --input target \
+                      --dest dist \
+                      --name CalculatriceDEEVEN \
+                      --main-jar ${JAR_NAME} \
+                      --main-class com.example.CalculatriceApp \
+                      --icon icon.png \
+                      --linux-shortcut \
+                      --add-modules javafx.controls,javafx.fxml \
+                      --verbose
                 '''
             }
         }
