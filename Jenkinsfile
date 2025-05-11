@@ -82,18 +82,15 @@ pipeline {
                 echo '📦 Création de l’installateur .rpm...'
                 sh '''
                     mkdir -p dist
-                    jpackage \
-                      --type rpm \
-                      --input target \
-                      --dest dist \
-                      --name ${APP_NAME} \
-                      --main-jar ${JAR_NAME} \
-                      --main-class com.example.CalculatriceApp \
-                      --icon icon.png \
-                      --linux-shortcut \
-                     --module-path ${JAVAFX_LIB}:/usr/lib/jvm/bellsoft-java21-full.x86_64/lib
-                      --add-modules javafx.controls,javafx.fxml \
-                      --verbose
+                 jpackage --type rpm \
+                   --input target \
+                   --dest dist \
+                   --name CalculatriceDEEVEN \
+                   --main-jar calculatrice-1.0.0-jar-with-dependencies.jar \
+                   --main-class com.example.CalculatriceApp \
+                   --icon icon.png \
+                   --linux-shortcut \
+                   --verbose
                 '''
             }
         }
