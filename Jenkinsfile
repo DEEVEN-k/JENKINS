@@ -82,17 +82,19 @@ pipeline {
                echo '📦 Création de l’installateur .rpm...'
                sh '''
                    mkdir -p dist
-                   jpackage \
-                     --type rpm \
-                     --input target \
-                     --dest dist \
-                     --name ${APP_NAME} \
-                     --main-jar ${JAR_NAME} \
-                     --main-class com.example.CalculatriceApp \
-                     --icon icon.png \
-                     --linux-shortcut \
-                     --add-modules javafx.controls,javafx.fxml \
-                     --verbose
+                  jpackage \
+                    --type rpm \
+                    --input target \
+                    --dest dist \
+                    --name ${APP_NAME} \
+                    --main-jar ${JAR_NAME} \
+                    --main-class com.example.CalculatriceApp \
+                    --icon icon.png \
+                    --linux-shortcut \
+                    --module-path ${JAVAFX_LIB} \
+                    --add-modules javafx.controls,javafx.fxml \
+                    --verbose
+
                '''
            }
        }
