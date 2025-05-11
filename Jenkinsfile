@@ -10,7 +10,7 @@ pipeline {
         PATH = "${env.MAVEN_HOME}/bin:${env.PATH}"
         DEPLOY_DIR = '/home/eyadomaleki/deployement'
         JAR_NAME = 'calculatrice-1.0.0-jar-with-dependencies.jar'
-        JAVAFX_LIB = "/opt/javafx-sdk-21.0.7/lib"
+        JAVAFX_LIB = "/opt/javafx/javafx-sdk-21.0.2/lib"
     }
 
     triggers {
