@@ -11,9 +11,6 @@ pipeline {
         DEPLOY_DIR = '/home/eyadomaleki/deployement'
         JAR_NAME = 'calculatrice-1.0.0-jar-with-dependencies.jar'
         JAVAFX_LIB = "/opt/javafx-sdk-21.0.7/lib"
-
-
-
     }
 
     triggers {
@@ -36,7 +33,9 @@ pipeline {
         stage('Build') {
             steps {
                 echo '🏗️ Compilation du projet...'
-                sh 'mvn clean compile'
+                sh '''
+                    mvn clean compile
+                '''
             }
         }
 
@@ -56,14 +55,14 @@ pipeline {
 
         stage('Archive JAR') {
             steps {
-                echo '📁 Archivage...'
+                echo '📁 Archivage du JAR...'
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
 
         stage('Créer archive .zip') {
             steps {
-                echo '🗜️ Création .zip...'
+                echo '🗜️ Création de l’archive .zip...'
                 sh '''
                     mkdir -p dist
                     cp target/${JAR_NAME} dist/
@@ -72,35 +71,45 @@ pipeline {
             }
         }
 
-      stage('Créer .rpm') {
-    when { expression { isUnix() } }
-    steps {
-        echo '📦 Création .rpm pour Fedora...'
-        sh '''
-            mkdir -p dist
-            jpackage \
-              --type rpm \
-              --input target \
-              --dest dist \
-              --name CalculatriceDEEVEN \
-              --main-jar ${JAR_NAME} \
-              --main-class com.example.CalculatriceApp \
-              --icon icon.png \
-              --linux-shortcut \
-              --verbose
-        '''
-    }
-}
+        stage('Créer .rpm') {
+            when { expression { isUnix() } }
+            steps {
+                echo '📦 Création de l’installateur .rpm...'
+                sh '''
+                    mkdir -p dist
+                    jpackage \
+                      --type rpm \
+                      --input target \
+                      --dest dist \
+                      --name CalculatriceDEEVEN \
+                      --main-jar ${JAR_NAME} \
+                      --main-class com.example.CalculatriceApp \
+                      --icon icon.png \
+                      --linux-shortcut \
+                      --verbose
+                '''
+            }
+        }
 
-      
+        stage('Deploy') {
+            steps {
+                echo '🚀 Déploiement...'
+                sh '''
+                    cp dist/*.zip ${DEPLOY_DIR}/ || true
+                    cp dist/*.rpm ${DEPLOY_DIR}/ || true
+                '''
+            }
+        }
     }
 
     post {
         success {
             echo '✅ Pipeline terminé avec succès !'
+            archiveArtifacts artifacts: 'dist/*.zip, dist/*.rpm', fingerprint: true
         }
         failure {
             echo '❌ Le pipeline a échoué.'
+            sh 'cat target/surefire-reports/*.txt || true'
         }
         always {
             echo '🧹 Nettoyage final...'
