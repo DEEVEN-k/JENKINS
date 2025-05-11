@@ -2,14 +2,14 @@ pipeline {
     agent any
 
     tools {
-        jdk 'BellSoft-21' // Assurez-vous que ce JDK est bien défini dans Jenkins (avec jpackage)
+        jdk 'BellSoft-21'
     }
 
     environment {
         MAVEN_HOME = '/usr/share/maven'
         PATH = "${env.MAVEN_HOME}/bin:${env.PATH}"
         DEPLOY_DIR = '/home/eyadomaleki/deployement'
-        JAR_NAME = 'calculatrice-1.0.0-jar-with-dependencies.jar'
+        JAR_NAME = 'calculatrice-1.0.1-jar-with-dependencies.jar'
         APP_NAME = 'CalculatriceDEEVEN'
         JAVAFX_LIB = "/opt/javafx/javafx-sdk-21.0.2/lib"
     }
@@ -86,7 +86,7 @@ pipeline {
                    --input target \
                    --dest dist \
                    --name CalculatriceDEEVEN \
-                   --main-jar calculatrice-1.0.0-jar-with-dependencies.jar \
+                   --main-jar calculatrice-1.0.1-jar-with-dependencies.jar \
                    --main-class com.example.CalculatriceApp \
                    --icon icon.png \
                    --linux-shortcut \
