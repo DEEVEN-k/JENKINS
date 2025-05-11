@@ -44,6 +44,13 @@ pipeline {
             }
         }
 
+        stage('Run JavaFX Application') {
+            steps {
+                echo '🚀 Lancement de l’application JavaFX pour vérification...'
+                sh 'mvn javafx:run'
+            }
+        }
+
         stage('Package') {
             steps {
                 echo '📦 Packaging...'
