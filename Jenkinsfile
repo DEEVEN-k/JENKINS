@@ -11,7 +11,6 @@ pipeline {
         DEPLOY_DIR = '/home/eyadomaleki/deployement'
         JAR_NAME = 'calculatrice-1.0.1-jar-with-dependencies.jar'
         APP_NAME = 'CalculatriceDEEVEN'
-        JAVAFX_LIB = "/opt/javafx/javafx-sdk-21.0.2/lib"
     }
 
     triggers {
@@ -76,32 +75,33 @@ pipeline {
             }
         }
 
-      stage('Créer .rpm') {
-          when { expression { isUnix() } }
-          steps {
-              echo '📦 Création du runtime personnalisé et de l’installateur .rpm...'
-              sh '''
-                  mkdir -p dist
-                  # Créer un runtime Java minimal avec JavaFX
-                  jlink \
-                    --module-path "$JAVA_HOME/jmods:${JAVAFX_LIB}" \
-                    --add-modules java.base,java.desktop,javafx.controls,javafx.fxml \
-                    --output dist/runtime
+        stage('Créer .rpm') {
+            when { expression { isUnix() } }
+            steps {
+                echo '📦 Création du runtime personnalisé et de l’installateur .rpm...'
+                sh '''
+                    mkdir -p dist
 
-                  # Générer le RPM avec le runtime personnalisé
-                  jpackage --type rpm \
-                    --input target \
-                    --dest dist \
-                    --name ${APP_NAME} \
-                    --main-jar ${JAR_NAME} \
-                    --main-class com.example.CalculatriceApp \
-                    --icon icon.png \
-                    --linux-shortcut \
-                    --runtime-image dist/runtime \
-                    --verbose
-              '''
-          }
-      }
+                    # Créer un runtime Java minimal avec JavaFX (inclus dans BellSoft Full JDK)
+                    jlink \
+                      --module-path "$JAVA_HOME/jmods" \
+                      --add-modules java.base,java.desktop,javafx.controls,javafx.fxml \
+                      --output dist/runtime
+
+                    # Générer le RPM avec le runtime personnalisé
+                    jpackage --type rpm \
+                      --input target \
+                      --dest dist \
+                      --name ${APP_NAME} \
+                      --main-jar ${JAR_NAME} \
+                      --main-class com.example.CalculatriceApp \
+                      --icon icon.png \
+                      --linux-shortcut \
+                      --runtime-image dist/runtime \
+                      --verbose
+                '''
+            }
+        }
 
         stage('Déploiement') {
             steps {

@@ -6,12 +6,12 @@
 
     <groupId>com.example</groupId>
     <artifactId>calculatrice</artifactId>
-    <version>1.0.1</version> <!-- mis à jour pour matcher le nom du JAR -->
+    <version>1.0.1</version> <!-- Mis à jour pour matcher le nom du JAR -->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source> <!-- Mise à jour vers Java 21 -->
+        <maven.compiler.target>21</maven.compiler.target> <!-- Mise à jour vers Java 21 -->
         <javafx.version>21.0.2</javafx.version>
     </properties>
 
@@ -46,15 +46,15 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.10.1</version>
                 <configuration>
-                    <release>17</release>
+                    <release>21</release> <!-- Mise à jour vers Java 21 -->
                 </configuration>
             </plugin>
 
-            <!-- Plugin pour JavaFX (exécution uniquement locale) -->
+            <!-- Plugin pour JavaFX -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.8</version>
+                <version>0.0.12</version> <!-- Version mise à jour -->
                 <configuration>
                     <mainClass>com.example.CalculatriceApp</mainClass>
                 </configuration>
