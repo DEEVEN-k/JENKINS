@@ -10,6 +10,7 @@ pipeline {
         PATH = "${env.MAVEN_HOME}/bin:${env.PATH}"
         DEPLOY_DIR = '/home/eyadomaleki/deployement'
         JAR_NAME = 'calculatrice-1.0.0-jar-with-dependencies.jar'
+        APP_NAME = 'CalculatriceDEEVEN'
         JAVAFX_LIB = "/opt/javafx/javafx-sdk-21.0.2/lib"
     }
 
@@ -46,7 +47,7 @@ pipeline {
 
         stage('Package') {
             steps {
-                echo '📦 Packaging...'
+                echo '📦 Packaging avec dépendances...'
                 sh 'mvn package'
             }
         }
@@ -54,7 +55,13 @@ pipeline {
         stage('Archive JAR') {
             steps {
                 echo '📁 Archivage du JAR...'
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                sh '''
+                    if [ ! -f target/${JAR_NAME} ]; then
+                        echo "❌ Le fichier ${JAR_NAME} est introuvable dans target/"
+                        exit 1
+                    fi
+                '''
+                archiveArtifacts artifacts: "target/${JAR_NAME}", fingerprint: true
             }
         }
 
@@ -75,17 +82,17 @@ pipeline {
                 echo '📦 Création de l’installateur .rpm...'
                 sh '''
                     mkdir -p dist
-
                     jpackage \
                       --type rpm \
                       --input target \
                       --dest dist \
-                      --name CalculatriceDEEVEN \
+                      --name ${APP_NAME} \
                       --main-jar ${JAR_NAME} \
                       --main-class com.example.CalculatriceApp \
                       --icon icon.png \
                       --linux-shortcut \
                       --add-modules javafx.controls,javafx.fxml \
+                      --runtime-image $JAVA_HOME \
                       --verbose
                 '''
             }
@@ -95,8 +102,9 @@ pipeline {
             steps {
                 echo '🚀 Déploiement...'
                 sh '''
-                    cp dist/*.zip ${DEPLOY_DIR}/ || true
-                    cp dist/*.rpm ${DEPLOY_DIR}/ || true
+                    mkdir -p ${DEPLOY_DIR}
+                    cp dist/*.zip ${DEPLOY_DIR}/ || echo "Pas de zip à déployer"
+                    cp dist/*.rpm ${DEPLOY_DIR}/ || echo "Pas de rpm à déployer"
                 '''
             }
         }
