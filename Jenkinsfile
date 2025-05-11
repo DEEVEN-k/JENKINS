@@ -91,7 +91,7 @@ pipeline {
                       --main-class com.example.CalculatriceApp \
                       --icon icon.png \
                       --linux-shortcut \
-                      --module-path ${JAVAFX_LIB} \
+                     --module-path ${JAVAFX_LIB}:/usr/lib/jvm/bellsoft-java21-full.x86_64/lib
                       --add-modules javafx.controls,javafx.fxml \
                       --verbose
                 '''
