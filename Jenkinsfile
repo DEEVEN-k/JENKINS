@@ -68,9 +68,9 @@ pipeline {
             steps {
                 echo '🗜️ Création de l’archive .zip...'
                 sh '''
-                    mkdir -p dist
-                    cp target/${JAR_NAME} dist/
-                    cd dist && zip calculatrice-${BUILD_NUMBER}.zip ${JAR_NAME}
+                   sudo mkdir -p dist
+                   sudo cp target/${JAR_NAME} dist/
+                  sudo cd dist && zip calculatrice-${BUILD_NUMBER}.zip ${JAR_NAME}
                 '''
             }
         }
@@ -80,7 +80,7 @@ pipeline {
             steps {
                 echo '📦 Création du runtime personnalisé et de l’installateur .rpm...'
                 sh '''
-                    mkdir -p dist
+                 sudo mkdir -p dist
 
                     # Créer un runtime Java minimal avec JavaFX (inclus dans BellSoft Full JDK)
                     jlink \
@@ -107,9 +107,9 @@ pipeline {
             steps {
                 echo '🚀 Déploiement vers le dossier cible...'
                 sh '''
-                    mkdir -p ${DEPLOY_DIR}
-                    cp dist/*.zip ${DEPLOY_DIR}/ || echo "⚠️ Pas de fichier zip à déployer."
-                    cp dist/*.rpm ${DEPLOY_DIR}/ || echo "⚠️ Pas de fichier rpm à déployer."
+                   sudo mkdir -p ${DEPLOY_DIR}
+                   sudo cp dist/*.zip ${DEPLOY_DIR}/ || echo "⚠️ Pas de fichier zip à déployer."
+                   sudo cp dist/*.rpm ${DEPLOY_DIR}/ || echo "⚠️ Pas de fichier rpm à déployer."
                 '''
             }
         }
