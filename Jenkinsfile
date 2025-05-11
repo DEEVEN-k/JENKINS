@@ -76,24 +76,32 @@ pipeline {
             }
         }
 
-        stage('Créer .rpm') {
-            when { expression { isUnix() } }
-            steps {
-                echo '📦 Création de l’installateur .rpm...'
-                sh '''
-                    mkdir -p dist
-                 jpackage --type rpm \
-                   --input target \
-                   --dest dist \
-                   --name CalculatriceDEEVEN \
-                   --main-jar calculatrice-1.0.1-jar-with-dependencies.jar \
-                   --main-class com.example.CalculatriceApp \
-                   --icon icon.png \
-                   --linux-shortcut \
-                   --verbose
-                '''
-            }
-        }
+      stage('Créer .rpm') {
+          when { expression { isUnix() } }
+          steps {
+              echo '📦 Création du runtime personnalisé et de l’installateur .rpm...'
+              sh '''
+                  mkdir -p dist
+                  # Créer un runtime Java minimal avec JavaFX
+                  jlink \
+                    --module-path "$JAVA_HOME/jmods:${JAVAFX_LIB}" \
+                    --add-modules java.base,java.desktop,javafx.controls,javafx.fxml \
+                    --output dist/runtime
+
+                  # Générer le RPM avec le runtime personnalisé
+                  jpackage --type rpm \
+                    --input target \
+                    --dest dist \
+                    --name ${APP_NAME} \
+                    --main-jar ${JAR_NAME} \
+                    --main-class com.example.CalculatriceApp \
+                    --icon icon.png \
+                    --linux-shortcut \
+                    --runtime-image dist/runtime \
+                    --verbose
+              '''
+          }
+      }
 
         stage('Déploiement') {
             steps {
