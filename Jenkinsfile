@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        jdk 'JDK17'
+        jdk 'BellSoft-21' // Assurez-vous que ce JDK est bien défini dans Jenkins (avec jpackage)
     }
 
     environment {
@@ -40,21 +40,21 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo '🧪 Tests unitaires...'
+                echo '🧪 Exécution des tests unitaires...'
                 sh 'mvn test'
             }
         }
 
         stage('Package') {
             steps {
-                echo '📦 Packaging avec dépendances...'
+                echo '📦 Packaging du JAR avec dépendances...'
                 sh 'mvn package'
             }
         }
 
         stage('Archive JAR') {
             steps {
-                echo '📁 Archivage du JAR...'
+                echo '📁 Archivage du fichier JAR...'
                 sh '''
                     if [ ! -f target/${JAR_NAME} ]; then
                         echo "❌ Le fichier ${JAR_NAME} est introuvable dans target/"
@@ -76,37 +76,35 @@ pipeline {
             }
         }
 
-       stage('Créer .rpm') {
-           when { expression { isUnix() } }
-           steps {
-               echo '📦 Création de l’installateur .rpm...'
-               sh '''
-                   mkdir -p dist
-                 jpackage \
-                   --type rpm \
-                   --input target \
-                   --dest dist \
-                   --name CalculatriceDEEVEN \
-                   --main-jar calculatrice-1.0.0-jar-with-dependencies.jar \
-                   --main-class com.example.CalculatriceApp \
-                   --icon icon.png \
-                   --linux-shortcut \
-                   --module-path /usr/lib/jvm/bellsoft-java21-full.x86_64/lib \
-                   --add-modules javafx.controls,javafx.fxml \
-                   --verbose
-
-
-               '''
-           }
-       }
-
-        stage('Deploy') {
+        stage('Créer .rpm') {
+            when { expression { isUnix() } }
             steps {
-                echo '🚀 Déploiement...'
+                echo '📦 Création de l’installateur .rpm...'
+                sh '''
+                    mkdir -p dist
+                    jpackage \
+                      --type rpm \
+                      --input target \
+                      --dest dist \
+                      --name ${APP_NAME} \
+                      --main-jar ${JAR_NAME} \
+                      --main-class com.example.CalculatriceApp \
+                      --icon icon.png \
+                      --linux-shortcut \
+                      --module-path ${JAVAFX_LIB} \
+                      --add-modules javafx.controls,javafx.fxml \
+                      --verbose
+                '''
+            }
+        }
+
+        stage('Déploiement') {
+            steps {
+                echo '🚀 Déploiement vers le dossier cible...'
                 sh '''
                     mkdir -p ${DEPLOY_DIR}
-                    cp dist/*.zip ${DEPLOY_DIR}/ || echo "Pas de zip à déployer"
-                    cp dist/*.rpm ${DEPLOY_DIR}/ || echo "Pas de rpm à déployer"
+                    cp dist/*.zip ${DEPLOY_DIR}/ || echo "⚠️ Pas de fichier zip à déployer."
+                    cp dist/*.rpm ${DEPLOY_DIR}/ || echo "⚠️ Pas de fichier rpm à déployer."
                 '''
             }
         }
@@ -114,15 +112,15 @@ pipeline {
 
     post {
         success {
-            echo '✅ Pipeline terminé avec succès !'
+            echo '✅ Pipeline exécuté avec succès !'
             archiveArtifacts artifacts: 'dist/*.zip, dist/*.rpm', fingerprint: true
         }
         failure {
-            echo '❌ Le pipeline a échoué.'
+            echo '❌ Échec du pipeline.'
             sh 'cat target/surefire-reports/*.txt || true'
         }
         always {
-            echo '🧹 Nettoyage final...'
+            echo '🧹 Nettoyage du workspace...'
             cleanWs()
         }
     }
