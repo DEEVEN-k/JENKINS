@@ -6,7 +6,7 @@
 
     <groupId>com.example</groupId>
     <artifactId>calculatrice</artifactId>
-    <version>1.0.0</version> <!-- mis à jour pour matcher le nom du JAR -->
+    <version>1.0.1</version> <!-- mis à jour pour matcher le nom du JAR -->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -72,7 +72,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <finalName>calculatrice-1.0.0-jar-with-dependencies</finalName>
+                            <finalName>calculatrice-1.0.1-jar-with-dependencies</finalName>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>com.example.CalculatriceApp</mainClass>
