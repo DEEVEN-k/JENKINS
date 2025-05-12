@@ -8,7 +8,7 @@ pipeline {
     environment {
         MAVEN_HOME = '/usr/share/maven'
         PATH = "${env.MAVEN_HOME}/bin:${env.PATH}"
-        DEPLOY_DIR = '/home/DEPLOYEMENT_D_APPLICATION'
+        DEPLOY_DIR = '/var/jenkins_home/DEPLOYEMENT_D_APPLICATION'
         JAR_NAME = 'calculatrice-1.0.1-jar-with-dependencies.jar'
         APP_NAME = 'CalculatriceDEEVEN'
     }
