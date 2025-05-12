@@ -120,10 +120,7 @@ pipeline {
             echo '✅ Pipeline exécuté avec succès !'
             archiveArtifacts artifacts: 'dist/*.zip, dist/*.rpm', fingerprint: true
         }
-        failure {
-            echo '❌ Échec du pipeline.'
-            sh 'cat target/surefire-reports/*.txt || true'
-        }
+
         always {
             echo '🧹 Nettoyage du workspace...'
             cleanWs()
