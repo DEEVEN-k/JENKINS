@@ -57,7 +57,7 @@ public class CalculatriceApp extends Application {
         scene.setOnKeyPressed(this::handleKeyPress);
 
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Calculatrice DEVPRO");
+        primaryStage.setTitle("Calculatrice");
         primaryStage.show();
     }
 
