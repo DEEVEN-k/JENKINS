@@ -118,7 +118,7 @@ pipeline {
     post {
         success {
             echo '✅ Pipeline exécuté avec succès !'
-            archiveArtifacts artifacts: 'dist/*.zip, dist/*.rpm', fingerprint: true
+
         }
 
         always {
